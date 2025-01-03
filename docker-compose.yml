@@ -1,0 +1,87 @@
+services:
+  app:
+    build:
+      context: .
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+      - rabbitmq
+      - minio
+    command: ["sh", "scripts/startup.sh", "bot"]
+
+  postgres:
+    image: postgres:15
+    env_file:
+      - .env
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  migrate:
+    build:
+      context: .
+    env_file:
+      - .env
+    environment:
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["sh", "scripts/startup.sh", "migrate"]
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    env_file:
+      - .env
+    ports:
+      - "${RABBITMQ_PORT}:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    command: server /data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./models:/models
+    command: ["sh", "scripts/startup.sh", "consumer"]
+
+volumes:
+  postgres_data:
+  minio_data:
+  minio_config:
+  models:

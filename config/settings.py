@@ -1,0 +1,39 @@
+from pydantic_settings import BaseSettings
+
+
+class Settings(BaseSettings):
+    POSTGRES_USER: str = "postgres"
+    POSTGRES_PASSWORD: str = "postgres"
+    POSTGRES_DB: str = "voice2text"
+    POSTGRES_HOST: str = "localhost"
+    POSTGRES_PORT: str = "5432"
+
+    MINIO_ROOT_USER: str = "minioadmin"
+    MINIO_ROOT_PASSWORD: str = "minioadmin"
+    MINIO_BUCKET_NAME: str = "audiofiles"
+    MINIO_ENDPOINT: str = "http://localhost:9000"
+
+    RABBITMQ_HOST: str = "localhost"
+    RABBITMQ_PORT: int = 5672
+    RABBITMQ_QUEUE: str = "voice_tasks"
+
+    LOGGING_CONFIG_FILE: str = "config/logging.conf.yml"
+
+    WHISPER_MODEL: str = "small"
+    MODELS_DIR: str = "/models"
+    DEVICE_TYPE: str = "cpu"  # Используйте "cuda" для GPU
+
+    TELEGRAM_BOT_TOKEN: str
+
+    @property
+    def DATABASE_URL(self):
+        return (
+            f"postgresql+psycopg2://{self.POSTGRES_USER}:" +
+            f"{self.POSTGRES_PASSWORD}@" +
+            f"{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+        )
+
+    class Config:
+        env_file = "../.env"  # Укажите правильный путь к файлу .env
+
+settings = Settings()

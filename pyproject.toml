@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "voice2text"
+version = "0.1.0"
+description = ""
+authors = ["argunv"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aiogram = "^3.15.1"  # Обновлено для совместимости
+psycopg2-binary = "^2.9.8"  # Более стабильная версия
+alembic = "^1.8.1"  # Совместимость с SQLAlchemy
+psycopg = "^3.2.0"  # Совместимость с asyncpg
+python-dotenv = "^0.21.0"  # Проверенная версия
+pydantic-settings = "^2.3.0"  # Устранены проблемы в ранних версиях
+boto3 = "^1.26.2"  # Последняя стабильная версия
+pika = "^1.2.1"  # Совместимость с aio_pika
+prometheus-client = "^0.15.0"  # Совместимость с Python 3.10
+asyncpg = "^0.27.0"  # Проверенная стабильная версия
+requests = "^2.32.3"
+aio-pika = "^9.5.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

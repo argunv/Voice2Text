@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+service TranscriptionService {
+  rpc GetTranscription (TranscriptionRequest) returns (TranscriptionResponse);
+}
+
+message TranscriptionRequest {
+  int32 user_id = 1;
+}
+
+message TranscriptionResponse {
+  repeated Transcription transcriptions = 1;
+}
+
+message Transcription {
+  int32 id = 1;
+  int32 user_id = 2;
+  string transcription = 3;
+}

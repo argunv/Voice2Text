@@ -1,0 +1,28 @@
+{
+    "dashboard": {
+      "title": "Voice2Text Monitoring",
+      "panels": [
+        {
+          "type": "graph",
+          "title": "HTTP Requests",
+          "targets": [
+            {
+              "expr": "rate(http_requests_total[5m])",
+              "legendFormat": "HTTP Requests"
+            }
+          ]
+        },
+        {
+          "type": "graph",
+          "title": "RabbitMQ Messages",
+          "targets": [
+            {
+              "expr": "rate(rabbitmq_messages_published_total[5m])",
+              "legendFormat": "Messages Published"
+            }
+          ]
+        }
+      ]
+    }
+  }
+  
