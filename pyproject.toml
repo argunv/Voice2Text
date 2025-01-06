@@ -19,6 +19,9 @@ prometheus-client = "^0.15.0"  # Совместимость с Python 3.10
 asyncpg = "^0.27.0"  # Проверенная стабильная версия
 requests = "^2.32.3"
 aio-pika = "^9.5.4"
+uvicorn = "^0.30.6"
+aiohttp = "3.9.5"
+fastapi = "^0.115.6"
 
 [build-system]
 requires = ["poetry-core"]

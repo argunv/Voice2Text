@@ -9,6 +9,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
+# Установка ngrok
+RUN curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | \
+    tee /etc/apt/trusted.gpg.d/ngrok.asc > /dev/null && \
+    echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | \
+    tee /etc/apt/sources.list.d/ngrok.list > /dev/null && \
+    apt-get update && apt-get install -y ngrok
+
 # Установка Poetry
 RUN pip install poetry
 
@@ -29,4 +36,4 @@ RUN pip install openai-whisper==20231117
 COPY . /app/
 
 # Команда запуска
-CMD ["sh", "scripts/startup.sh"]
+# CMD ["sh", "scripts/startup.sh"]

@@ -25,6 +25,16 @@ class Settings(BaseSettings):
 
     TELEGRAM_BOT_TOKEN: str
 
+    BOT_MODE: str = "polling"  # Возможные значения: "polling" или "webhook"
+
+    # NGROK SETTINGS
+    NGROK_TOKEN: str
+    NGROK_PROTOCOL: str = "http"
+    NGROK_PORT: str = "8080"
+
+    WEBHOOK_PORT: int = 8080
+    WEBHOOK_PATH: str = "/webhook"
+
     @property
     def DATABASE_URL(self):
         return (

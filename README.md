@@ -27,5 +27,5 @@ docker-compose up
 ```
 
 ## Автор
-- [Аргун Владислав](github.com/argunv)
+- [Аргун Владислав](https://github.com/argunv)
 
