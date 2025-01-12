@@ -1,4 +1,16 @@
 services:
+  redis:
+    image: redis:7
+    env_file:
+      - .env
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   bot:
     ports:
       - "${BOT_PORT}:${BOT_PORT}"

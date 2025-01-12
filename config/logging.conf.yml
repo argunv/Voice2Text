@@ -1,28 +1,81 @@
 version: 1
 formatters:
-  default:
+  standard:
     format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
 handlers:
   console:
     class: logging.StreamHandler
-    formatter: default
+    formatter: standard
     level: DEBUG
-  file:
+
+  file_bot:
     class: logging.FileHandler
-    formatter: default
-    filename: logs/app.log
-    level: INFO
+    formatter: standard
+    filename: logs/bot.log
+    level: DEBUG
+
+  file_logging_middleware:
+    class: logging.FileHandler
+    formatter: standard
+    filename: logs/logging_middleware.log
+    level: DEBUG
+
+  file_transcription_service:
+    class: logging.FileHandler
+    formatter: standard
+    filename: logs/transcription_service.log
+    level: DEBUG
+
+  file_ngrok:
+    class: logging.FileHandler
+    formatter: standard
+    filename: logs/ngrok.log
+    level: DEBUG
+
+  file_consumer:
+    class: logging.FileHandler
+    formatter: standard
+    filename: logs/consumer.log
+    level: DEBUG
+  
+  file_minio_client:
+    class: logging.FileHandler
+    formatter: standard
+    filename: logs/minio_client.log
+    level: DEBUG
 
 loggers:
-  app:
+  bot:
+    handlers: [console, file_bot]
     level: DEBUG
-    handlers:
-      - console
-      - file
-    propagate: no
+    propagate: False
+
+  logging_middleware:
+    handlers: [console, file_logging_middleware]
+    level: DEBUG
+    propagate: False
+
+  transcription_service:
+    handlers: [console, file_transcription_service]
+    level: DEBUG
+    propagate: False
+
+  ngrok:
+    handlers: [console, file_ngrok]
+    level: DEBUG
+    propagate: False
+
+  consumer:
+    handlers: [console, file_consumer]
+    level: DEBUG
+    propagate: False
+  
+  minio_client:
+    handlers: [console]
+    level: DEBUG
+    propagate: False
 
 root:
-  level: INFO
-  handlers:
-    - console
+  handlers: [console]
+  level: DEBUG

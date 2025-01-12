@@ -1,4 +1,3 @@
-import logging
 from pathlib import Path
 
 import torch
@@ -6,7 +5,10 @@ import whisper
 
 from config.settings import settings
 
-logger = logging.getLogger(__name__)
+from app.core.logger import Logger
+
+
+logger = Logger("transcription_service").get_logger()
 
 # Конфигурация модели
 MODEL_NAME = settings.WHISPER_MODEL or "small"

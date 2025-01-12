@@ -25,7 +25,8 @@ COPY pyproject.toml poetry.lock /app/
 
 # Отключение виртуальных окружений и установка зависимостей
 RUN poetry config virtualenvs.create false
-RUN poetry install --no-root
+RUN poetry install --no-root --no-dev
+# Важно добавить --no-dev, если не нужны dev-зависимости
 
 # Установка Whisper и PyTorch (без использования Poetry)
 RUN pip install --index-url=https://download.pytorch.org/whl/cpu torch==2.3.0 \

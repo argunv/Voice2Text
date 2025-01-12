@@ -174,3 +174,9 @@ cython_debug/
 
 # Whisper model ignore
 *.pt
+
+# Unused files
+*_unused*
+
+# Old files
+*_old*

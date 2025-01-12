@@ -35,6 +35,9 @@ class Settings(BaseSettings):
     WEBHOOK_PORT: int = 8080
     WEBHOOK_PATH: str = "/webhook"
 
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+
     @property
     def DATABASE_URL(self):
         return (
