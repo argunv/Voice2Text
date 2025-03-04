@@ -9,72 +9,103 @@ handlers:
     formatter: standard
     level: DEBUG
 
-  file_bot:
+  bot_file:
     class: logging.FileHandler
     formatter: standard
     filename: logs/bot.log
     level: DEBUG
 
-  file_logging_middleware:
+  middleware_logging_file:
     class: logging.FileHandler
     formatter: standard
-    filename: logs/logging_middleware.log
+    filename: logs/middleware_logging.log
     level: DEBUG
 
-  file_transcription_service:
+  middleware_error_handler_file:
+    class: logging.FileHandler
+    formatter: standard
+    filename: logs/middleware_error_handler.log
+    level: DEBUG
+  
+  middleware_voice_limit_file:
+    class: logging.FileHandler
+    formatter: standard
+    filename: logs/middleware_voice_limit.log
+    level: DEBUG
+
+  transcription_service_file:
     class: logging.FileHandler
     formatter: standard
     filename: logs/transcription_service.log
     level: DEBUG
 
-  file_ngrok:
+  ngrok_file:
     class: logging.FileHandler
     formatter: standard
     filename: logs/ngrok.log
     level: DEBUG
 
-  file_consumer:
+  consumer_file:
     class: logging.FileHandler
     formatter: standard
     filename: logs/consumer.log
     level: DEBUG
-  
-  file_minio_client:
+
+  minio_client_file:
     class: logging.FileHandler
     formatter: standard
     filename: logs/minio_client.log
     level: DEBUG
+  
+  rabbitmq_tasks_file:
+    class: logging.FileHandler
+    formatter: standard
+    filename: logs/rabbitmq_tasks.log
+    level: DEBUG
 
 loggers:
   bot:
-    handlers: [console, file_bot]
+    handlers: [console, bot_file]
     level: DEBUG
     propagate: False
 
-  logging_middleware:
-    handlers: [console, file_logging_middleware]
+  middleware_logging:
+    handlers: [console, middleware_logging_file]
+    level: DEBUG
+    propagate: False
+
+  middleware_error_handler:
+    handlers: [console, middleware_error_handler_file]
+    level: DEBUG
+    propagate: False
+  
+  middleware_voice_limit:
+    handlers: [console, middleware_voice_limit_file]
     level: DEBUG
     propagate: False
 
   transcription_service:
-    handlers: [console, file_transcription_service]
+    handlers: [console, transcription_service_file]
     level: DEBUG
     propagate: False
 
   ngrok:
-    handlers: [console, file_ngrok]
+    handlers: [console, ngrok_file]
     level: DEBUG
     propagate: False
 
   consumer:
-    handlers: [console, file_consumer]
+    handlers: [console, consumer_file]
+    level: DEBUG
+    propagate: False
+
+  minio_client:
+    handlers: [console, minio_client_file]
     level: DEBUG
     propagate: False
   
-  minio_client:
-    handlers: [console]
-    level: DEBUG
-    propagate: False
+  rabbitmq_tasks:
+    handlers: [console, rabbitmq_tasks_file]
 
 root:
   handlers: [console]

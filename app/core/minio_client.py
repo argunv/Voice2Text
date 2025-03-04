@@ -24,7 +24,30 @@ def get_minio_client():
     )
 
 
-def upload_file_to_minio(file_url, file_name):
+def validate_file_name(file_name: str) -> bool:
+    """
+    Проверяет имя файла на допустимые символы.
+
+    Args:
+        file_name (str): Имя файла.
+
+    Returns:
+        bool: Результат проверки.
+    """
+    invalid_conditions = [
+        not file_name,
+        not file_name.isprintable(),
+        "/" in file_name,
+        "\\" in file_name,
+        len(file_name) > 255,
+        file_name.startswith("."),
+        file_name.endswith("."),
+        any(char in file_name for char in "~#%&*{}\\:<>?/+|\"'")
+    ]
+    return not any(invalid_conditions)
+
+
+def upload_file_to_minio(file_url, file_name) -> dict[str]:
     """
     Скачивает файл по URL, сохраняет его локально и загружает в MinIO.
 
@@ -33,8 +56,20 @@ def upload_file_to_minio(file_url, file_name):
         file_name (str): Имя файла для сохранения в MinIO.
 
     Returns:
-        str: URL загруженного файла в MinIO.
+        dict: JSON с данными про загруженный файл.
+
+        - **file_name** (*str*): Имя файла.
+        - **file_ext** (*str*): Расширение файла.
+        - **file_size** (*int*): Размер файла.
+        - **endpoint** (*str*): URL MinIO.
+        - **bucket_name** (*str*): Имя бакета.
+
+    Raises:
+        ValueError: Если произошла ошибка при загрузке файла.
     """
+    if not validate_file_name(file_name):
+        raise ValueError(f"Недопустимое имя файла: '{file_name}'")
+
     client = get_minio_client()
     bucket_name = settings.MINIO_BUCKET_NAME
 
@@ -63,8 +98,18 @@ def upload_file_to_minio(file_url, file_name):
         raise ValueError(f"Ошибка загрузки файла в MinIO: {e}")
 
     # Возвращаем URL загруженного файла
-    return f"{settings.MINIO_ENDPOINT}/{bucket_name}/{os.path.basename(file_name)}"
+    # return f"{settings.MINIO_ENDPOINT}/{bucket_name}/{os.path.basename(file_name)}"
 
+    # Возвращаем JSON с данными про загруженный файл
+    answer = {
+        "file_name": os.path.basename(file_name),
+        "file_ext": os.path.splitext(file_name)[1],
+        "file_size": os.path.getsize(local_file),
+        "endpoint": settings.MINIO_ENDPOINT,
+        "bucket_name": settings.MINIO_BUCKET_NAME
+    }
+
+    return answer
 
 def download_file_from_minio(file_name):
     """

@@ -2,11 +2,15 @@ import logging
 import logging.config
 import yaml
 import inspect
+import os
 from config.settings import settings
 
 
 class Logger:
     def __init__(self, module_name: str = None, config_path: str = None):
+        # Создание необходимой папки logs
+        os.makedirs("logs", exist_ok=True)
+
         # Загружаем конфигурацию из файла
         if not config_path:
             if not getattr(settings, 'LOGGING_CONFIG_FILE', None):

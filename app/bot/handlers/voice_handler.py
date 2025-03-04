@@ -3,6 +3,7 @@ from aiogram.types import Message
 from app.core.minio_client import upload_file_to_minio
 from app.core.rabbitmq_client import send_to_queue
 from app.core.redis_client import get_key, set_key
+from config.settings import settings
 
 
 async def process_voice_message(message: Message):
@@ -15,9 +16,8 @@ async def process_voice_message(message: Message):
 
     # Увеличиваем счётчик
     voice_count += 1
-    # NOTE: ttl=3600, чтобы ключ удалялся через час
-    # TODO: Стоит вынести ttl в настройки
-    await set_key(voice_key, str(voice_count), ttl=3600)
+
+    await set_key(voice_key, str(voice_count), ttl=settings.REDIS_TTL)
 
     voice = message.voice
     file_info = await message.bot.get_file(voice.file_id)
@@ -25,13 +25,9 @@ async def process_voice_message(message: Message):
               f"{message.bot.token}/{file_info.file_path}"
 
     # Сохраняем файл в Minio
-    minio_url = upload_file_to_minio(file_url, file_info.file_path)
+    task_data = upload_file_to_minio(file_url, file_info.file_path)
 
-    # Отправляем задачу на обработку
-    task_data = {
-        "user_id": user_id,
-        "file_url": minio_url
-    }
+    task_data['user_id'] = user_id
     send_to_queue(task_data)
 
     await message.reply("Ваше голосовое сообщение отправлено на обработку." +

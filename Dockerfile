@@ -23,9 +23,12 @@ RUN pip install poetry
 WORKDIR /app
 COPY pyproject.toml poetry.lock /app/
 
+# Создадим папки под логи (чтобы не было FileNotFoundError)
+RUN mkdir -p /app/logs
+
 # Отключение виртуальных окружений и установка зависимостей
 RUN poetry config virtualenvs.create false
-RUN poetry install --no-root --no-dev
+RUN poetry install --no-root
 # Важно добавить --no-dev, если не нужны dev-зависимости
 
 # Установка Whisper и PyTorch (без использования Poetry)

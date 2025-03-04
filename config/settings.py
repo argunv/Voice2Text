@@ -11,11 +11,20 @@ class Settings(BaseSettings):
     MINIO_ROOT_USER: str = "minioadmin"
     MINIO_ROOT_PASSWORD: str = "minioadmin"
     MINIO_BUCKET_NAME: str = "audiofiles"
-    MINIO_ENDPOINT: str = "http://localhost:9000"
+    
+    MINIO_PORT: int = 9000
+    MINIO_CONSOLE_PORT: int = 9001
+    MINIO_HOST: str = "localhost"
+    MINIO_PROTOCOL: str = "http"
+    MINIO_ENDPOINT: str = f"{MINIO_PROTOCOL}://{MINIO_HOST}:{MINIO_PORT}"
 
-    RABBITMQ_HOST: str = "localhost"
+    # MINIO_ENDPOINT: str = "http://localhost:9000"
+
+    RABBITMQ_HOST: str = "rabbitmq"
     RABBITMQ_PORT: int = 5672
     RABBITMQ_QUEUE: str = "voice_tasks"
+    RABBITMQ_USER: str
+    RABBITMQ_PASS: str
 
     LOGGING_CONFIG_FILE: str = "config/logging.conf.yml"
 
@@ -37,6 +46,11 @@ class Settings(BaseSettings):
 
     REDIS_HOST: str = "localhost"
     REDIS_PORT: int = 6379
+    REDIS_TTL: int = 3600
+
+    # bot middlewares settings
+    MAX_VOICE_DURATION: int = 30
+    MAX_VOICE_SIZE: int = 2000000
 
     @property
     def DATABASE_URL(self):

@@ -8,10 +8,10 @@ from aiogram.types import ContentType, Update
 from aiogram.filters import Command
 from fastapi import FastAPI, Request
 
+from app.bot import middlewares
 from config.settings import settings
 from scripts.ngrok import run_ngrok
 from app.bot.handlers.voice_handler import process_voice_message, start_command
-
 from app.core.redis_client import get_redis_client
 from app.core.logger import Logger
 
@@ -21,6 +21,9 @@ logger = Logger("bot").get_logger()
 # Создание бота и диспетчера
 bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
 dp = Dispatcher()
+
+# Регистрация middlewares
+middlewares.setup_middlewares(dp=dp)
 
 # Регистрация обработчиков
 dp.message.register(start_command, Command(commands=["start"]))
@@ -73,18 +76,10 @@ def create_app() -> FastAPI:
 
     @app.get("/")
     async def root():
-        """
-        Корневой эндпоинт.
-        Возвращает статус приложения.
-        """
         return {"status": "ok"}
 
     @app.get("/health")
     async def health():
-        """
-        Эндпоинт для проверки состояния приложения.
-        Возвращает статус "healthy", если приложение работает корректно.
-        """
         return {"status": "healthy"}
 
     return app

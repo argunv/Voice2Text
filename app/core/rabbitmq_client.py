@@ -5,7 +5,7 @@ import pika
 from config.settings import settings
 
 
-def send_to_queue(data):
+def send_to_queue(data: dict):
     """
     Отправляет сообщение в очередь RabbitMQ.
     """

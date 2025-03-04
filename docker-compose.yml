@@ -20,6 +20,7 @@ services:
       - .env
     volumes:
       - .:/app
+      - ./logs:/app/logs
     depends_on:
       - postgres
       - rabbitmq
@@ -66,18 +67,25 @@ services:
 
   minio:
     image: minio/minio
+    container_name: minio
+    env_file:
+      - .env
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     command: server /data
+    # Мапим порты с .env
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "${MINIO_PORT}:9000"
+      - "${MINIO_CONSOLE_PORT}:9001"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      test: ["CMD", "curl", "-f", "http://minio:9000/minio/health/live"]
       interval: 10s
       timeout: 5s
       retries: 3
+    volumes:
+      - minio_data:/data
+      - minio_config:/root/.minio
 
   consumer:
     build:
@@ -92,6 +100,7 @@ services:
         condition: service_healthy
     volumes:
       - ./models:/models
+      - ./logs:/app/logs
     command: ["sh", "scripts/startup.sh", "consumer"]
 
 volumes:
